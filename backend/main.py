@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import ideas
+from routes import ideas,scoring
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -10,6 +10,7 @@ app = FastAPI(
 
 # Include API routes
 app.include_router(ideas.router, prefix="/ideas", tags=["Ideas"])
+app.include_router(scoring.router, prefix="/scoring", tags=["AI Scoring"])
 
 # Root endpoint
 @app.get("/")

@@ -21,3 +21,5 @@ def submit_idea(idea: IdeaCreate):
 @router.get("/list")
 def list_ideas():
     return {"ideas": ideas}
+
+
