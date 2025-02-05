@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import ideas,scoring
+from routes import ideas,scoring,nft
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -11,6 +11,7 @@ app = FastAPI(
 # Include API routes
 app.include_router(ideas.router, prefix="/ideas", tags=["Ideas"])
 app.include_router(scoring.router, prefix="/scoring", tags=["AI Scoring"])
+app.include_router(nft.router, prefix="/nft", tags=["NFT Metadata"])
 
 # Root endpoint
 @app.get("/")
