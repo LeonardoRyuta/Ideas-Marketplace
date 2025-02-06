@@ -1,0 +1,8 @@
+{
+  "base-sepolia": {
+    "IdeaMarketplace": {
+      "address": "0xf5d0613B45Eb051A0b8e593ba75f6a60215FdC92",
+      "startBlock": 21538736
+    }
+  }
+}

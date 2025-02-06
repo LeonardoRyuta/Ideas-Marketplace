@@ -1,0 +1,3 @@
+/frontend/node_modules
+.env.local
+/ideas/node_modules
