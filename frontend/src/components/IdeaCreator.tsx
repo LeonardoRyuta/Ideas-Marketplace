@@ -9,7 +9,7 @@ import {
   DialogTrigger,
   DialogRoot,
 } from "@/components/ui/dialog";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Input,
   Textarea,

@@ -12,20 +12,14 @@ import {
 } from "@/components/ui/dialog";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { types } from "@/utils";
 
 const IdeaModal = ({
   title,
-  category,
+  categories,
   content,
   owner,
-}: {
-  title: string;
-  description: string;
-  category: string[];
-  image: string;
-  content: string;
-  owner: string;
-}) => {
+}: types.IdeaMetadata) => {
   return (
     <DialogRoot>
       <DialogTrigger asChild>
@@ -37,7 +31,7 @@ const IdeaModal = ({
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <HStack gap={2}>
-            {category.map((cat) => (
+            {categories.map((cat) => (
               <Badge key={cat} colorScheme="purple">
                 {cat}
               </Badge>

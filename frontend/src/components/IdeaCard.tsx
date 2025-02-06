@@ -1,7 +1,35 @@
 import { Box, Image, Text, Badge, VStack, HStack } from "@chakra-ui/react";
 import IdeaModal from "./IdeaModal";
+import Offer from "./Offer";
+import { types } from "@/utils";
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+import SeeOffers from "./SeeOffers";
 
-const IdeaCard = ({ title, description, category, image, content, owner }: { title: string, description: string, category: string[], image: string, content: string, owner: string }) => {
+const IdeaCard = ({ idea }: { idea: types.IdeaProps }) => {
+  const { address } = useAccount();
+  const [isOwner, setIsOwner] = useState(false);
+
+  const [ideaMetadata, setIdeaMetadata] = useState<types.IdeaMetadata>({
+    title: "",
+    description: "",
+    categories: [],
+    content: "",
+    ipfsHash: "",
+    owner: "",
+  });
+
+  useEffect(() => {
+    if (address && idea.creator === address) {
+      setIsOwner(true);
+    }
+
+    (async () => {
+      const file = await fetch(`https://ipfs.io/ipfs/${idea.metadataURI}`).then((res) => res.json());
+      setIdeaMetadata(file);
+    })();
+  }, []);
+
   return (
     <Box
       maxW="sm"
@@ -12,28 +40,33 @@ const IdeaCard = ({ title, description, category, image, content, owner }: { tit
       p={4}
       bg="white"
     >
-      <Image src={image || "/placeholder.png"} alt={title} borderRadius="md" />
+      <Image src={ideaMetadata?.ipfsHash || "/placeholder.png"} alt={ideaMetadata?.title} borderRadius="md" />
       <VStack align="start" gap={2} mt={4}>
         <HStack>
-          {category.map((cat) => (
+          {ideaMetadata?.categories.map((cat) => (
             <Badge key={cat} colorScheme="purple">
               {cat}
             </Badge>
           ))}
         </HStack>
         <Text fontWeight="bold" fontSize="xl">
-          {title}
+          {ideaMetadata?.title}
         </Text>
         <Text fontSize="sm" color="gray.600" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-          {description}
+          {ideaMetadata?.description}
         </Text>
         <Text fontSize="xs" color="gray.500">
-          Owned by: {owner.slice(0, 6)}...{owner.slice(-4)}
+          Owned by: {idea.creator.slice(0, 6)}...{idea.creator.slice(-4)}
         </Text>
-        {/* <Button colorScheme="blue" w="full" mt={2}>
-          View Details
-        </Button> */}
-        <IdeaModal title={title} description={description} category={category} image={image} content={content} owner={owner} />
+        <HStack justify="space-between" w="full">
+          <IdeaModal title={ideaMetadata?.title} description={ideaMetadata?.description} categories={ideaMetadata?.categories} ipfsHash={ideaMetadata?.ipfsHash} content={ideaMetadata?.content} owner={idea?.creator} />
+          {
+            isOwner ?
+              <Offer tokenId={idea.tokenId} />
+              :
+              <SeeOffers tokenId={idea.tokenId} />
+          }
+        </HStack>
       </VStack>
     </Box>
   );
