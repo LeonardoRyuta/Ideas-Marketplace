@@ -48,6 +48,7 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
     function placeOffer(uint256 tokenId) external payable {
         require(ownerOf(tokenId) != address(0), "Token does not exist");
         require(msg.value > 0, "Offer must be > 0");
+        require(msg.sender != ownerOf(tokenId), "Cannot offer on own token");
 
         offers[tokenId][msg.sender] = msg.value;
         emit OfferPlaced(tokenId, msg.sender, msg.value);
