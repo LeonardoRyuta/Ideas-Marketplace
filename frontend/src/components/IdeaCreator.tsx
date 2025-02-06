@@ -32,6 +32,8 @@ import {
   FileUploadTrigger,
 } from "@/components/ui/file-upload"
 import { HiCamera } from "react-icons/hi"
+import { useWriteContract } from "wagmi";
+import ABI from "../../public/IdeaMarketplace.json";
 
 const pinata = config.pinata;
 
@@ -48,6 +50,7 @@ const categoryOptions = createListCollection({
 
 
 const IdeaCreator = () => {
+  const { writeContract } = useWriteContract()
   const [ideaData, setIdeaData] = useState({
     title: "",
     description: "",
@@ -64,6 +67,18 @@ const IdeaCreator = () => {
     ipfsHash: string;
     content: string;
     owner: string;
+  }
+
+  const mintNFT = (ipfsHash: string) => {
+    writeContract({
+      abi:ABI.abi,
+      address:import.meta.env.VITE_SC_ADDRESS,
+      functionName:"mintIdea",
+      args: [
+        "0x2346ac3Bc15656D4dE1da99384B5498A75f128a2",
+        ipfsHash
+      ]
+    })
   }
 
   const handleSubmit = async () => {
@@ -88,6 +103,18 @@ const IdeaCreator = () => {
       owner,
     };
 
+    try {
+      const upload = await pinata.upload.json(submittedIdea);
+      console.log(upload);
+      mintNFT(upload.IpfsHash);
+    } catch (error) {
+      console.log(error);
+    }
+
+    //upload the submitted idea to ipfs with pinata and get hash
+
+
+
     console.log("Idea submitted:", submittedIdea);
     // Here, send the data to your backend or blockchain
     // Optionally reset the form:
@@ -100,10 +127,6 @@ const IdeaCreator = () => {
     //   owner: "",
     // });
   };
-
-  useEffect(() => {
-    console.log("Idea data:", ideaData);
-  }, [ideaData]);
 
   return (
     <DialogRoot>

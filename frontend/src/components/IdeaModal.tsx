@@ -13,8 +13,6 @@ import {
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const scAddress = import.meta.env.VITE_SC_ADDRESS;
-
 const IdeaModal = ({
   title,
   category,
