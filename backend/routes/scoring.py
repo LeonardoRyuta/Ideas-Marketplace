@@ -70,7 +70,12 @@ def submit_idea(idea: IdeaCreate):
         return {"error": "Failed to upload idea to IPFS"}
 
     # Get AI-generated score from the agent
-    ai_prompt = f"Score the following idea based on originality, feasibility, market demand, complexity, completeness:\n\nTitle: {idea.title}\nDescription: {idea.description}\nProvide only a structured JSON output for the scores only."
+    ai_prompt = f"""Score the following idea based on originality, feasibility, market demand, complexity, completeness:
+
+                Title: {idea.title}
+                Description: {idea.description}
+                Provide only a structured JSON output for the scores only. If it is not complete respond with : Incomplete Description ONLY no additional feedback
+                Example response: {{\"originality\": 7, \"feasibility\": 8, \"market_demand\": 9, \"complexity\": 6, \"completeness\": 8}} NOTHING ELSE"""
     ai_score = send_agent_request(ai_prompt)
 
     # Store locally (for now)
