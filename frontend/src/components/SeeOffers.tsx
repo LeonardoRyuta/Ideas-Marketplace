@@ -14,6 +14,8 @@ import { useQuery } from "@tanstack/react-query";
 import { gql, request } from 'graphql-request'
 import { useEffect, useState } from "react";
 import { formatEther } from "viem";
+import { useWriteContract } from "wagmi";
+import ABI from "../../public/IdeaMarketplace.json";
 
 const url = 'https://api.studio.thegraph.com/query/103524/proof-of-thought/version/latest'
 
@@ -27,6 +29,7 @@ interface PlacedOfferType {
 }
 
 const SeeOffers = ({ tokenId }: { tokenId: string }) => {
+  const { writeContract } = useWriteContract();
   const [offers, setOffers] = useState<PlacedOfferType[]>([]);
 
   const query = gql`query OffersForToken($tokenId: BigInt!) {
@@ -54,6 +57,18 @@ const SeeOffers = ({ tokenId }: { tokenId: string }) => {
     }
   }, [data])
 
+  const acceptOffer = (offer: PlacedOfferType) => {
+    writeContract({
+      abi: ABI.abi,
+      address: import.meta.env.VITE_SC_ADDRESS,
+      functionName: "acceptOffer",
+      args: [
+        parseInt(tokenId),
+        offer.offeror
+      ]
+    });
+  }
+
   return (
     <DialogRoot>
       <DialogTrigger asChild>
@@ -77,7 +92,7 @@ const SeeOffers = ({ tokenId }: { tokenId: string }) => {
                   <Button
                     colorScheme="green"
                     size="sm"
-                    onClick={() => console.log(`Accepted offer ${offer.transactionHash}`)}
+                    onClick={() => acceptOffer(offer)}
                   >
                     Accept Offer
                   </Button>

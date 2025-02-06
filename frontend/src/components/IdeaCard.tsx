@@ -20,7 +20,7 @@ const IdeaCard = ({ idea }: { idea: types.IdeaProps }) => {
   });
 
   useEffect(() => {
-    if (address && idea.creator === address) {
+    if (address && idea.creator.toLowerCase() === address.toLowerCase()) {
       setIsOwner(true);
     }
 
@@ -62,9 +62,10 @@ const IdeaCard = ({ idea }: { idea: types.IdeaProps }) => {
           <IdeaModal title={ideaMetadata?.title} description={ideaMetadata?.description} categories={ideaMetadata?.categories} ipfsHash={ideaMetadata?.ipfsHash} content={ideaMetadata?.content} owner={idea?.creator} />
           {
             isOwner ?
-              <Offer tokenId={idea.tokenId} />
-              :
               <SeeOffers tokenId={idea.tokenId} />
+              :
+              <Offer tokenId={idea.tokenId} />
+
           }
         </HStack>
       </VStack>
