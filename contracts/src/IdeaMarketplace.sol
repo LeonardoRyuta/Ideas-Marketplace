@@ -8,19 +8,11 @@ import "@openzeppelin/contracts/token/common/ERC2981.sol";
 contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
     uint128 private _tokenIdCounter;
 
-    struct Idea {
-        string ipfsHash;
-        address creator; 
-    }
-
-    mapping(uint256 => Idea) public ideas;
-
     mapping(uint256 => mapping(address => uint256)) public offers;
 
     event IdeaMinted(
         uint256 indexed tokenId,
         address indexed creator,
-        string ipfsHash,
         string metadataURI
     );
     event OfferPlaced(
@@ -41,25 +33,16 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
 
     constructor() ERC721("IdeaNFT", "IDEA") ERC2981() Ownable(msg.sender) {}
 
-    function mintIdea(
-        address to,
-        string calldata ipfsHash,
-        string calldata tokenURI_
-    ) external {
+    function mintIdea(address to, string calldata tokenURI_) external {
         uint256 tokenId = _tokenIdCounter;
         _tokenIdCounter++;
 
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, tokenURI_);
 
-        ideas[tokenId] = Idea({
-            ipfsHash: ipfsHash,
-            creator: to
-        });
+        _setTokenRoyalty(tokenId, to, 50);
 
-        _setTokenRoyalty(tokenId, to, 500);
-
-        emit IdeaMinted(tokenId, to, ipfsHash, tokenURI_);
+        emit IdeaMinted(tokenId, to, tokenURI_);
     }
 
     function placeOffer(uint256 tokenId) external payable {
@@ -105,6 +88,23 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
         emit OfferAccepted(tokenId, msg.sender, offeror, salePrice);
     }
 
+    function getAllOffers() external view returns (uint256[] memory) {
+        uint256[] memory tokenIds = new uint256[](_tokenIdCounter);
+        uint256 count = 0;
+        for (uint256 i = 0; i < _tokenIdCounter; i++) {
+            if (ownerOf(i) != address(0)) {
+                tokenIds[count] = i;
+                count++;
+            }
+        }
+        uint256[] memory result = new uint256[](count);
+        for (uint256 i = 0; i < count; i++) {
+            result[i] = tokenIds[i];
+        }
+        return result;
+    }
+
+    
     function setRoyalty(
         uint256 tokenId,
         address receiver,
