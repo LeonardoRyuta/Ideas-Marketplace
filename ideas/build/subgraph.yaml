@@ -1,0 +1,53 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: IdeaMarketplace
+    network: base-sepolia
+    source:
+      address: "0xf5d0613B45Eb051A0b8e593ba75f6a60215FdC92"
+      abi: IdeaMarketplace
+      startBlock: 21538736
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - BatchMetadataUpdate
+        - IdeaMinted
+        - MetadataUpdate
+        - OfferAccepted
+        - OfferPlaced
+        - OfferWithdrawn
+        - OwnershipTransferred
+        - Transfer
+      abis:
+        - name: IdeaMarketplace
+          file: IdeaMarketplace/IdeaMarketplace.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
+        - event: IdeaMinted(indexed uint256,indexed address,string)
+          handler: handleIdeaMinted
+        - event: MetadataUpdate(uint256)
+          handler: handleMetadataUpdate
+        - event: OfferAccepted(indexed uint256,indexed address,indexed address,uint256)
+          handler: handleOfferAccepted
+        - event: OfferPlaced(indexed uint256,indexed address,uint256)
+          handler: handleOfferPlaced
+        - event: OfferWithdrawn(indexed uint256,indexed address)
+          handler: handleOfferWithdrawn
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: IdeaMarketplace/IdeaMarketplace.wasm
