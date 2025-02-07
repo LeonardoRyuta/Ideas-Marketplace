@@ -17,11 +17,23 @@ interface IdeaMetadata {
   ipfsHash: string,
   categories: string[],
   content: string
-  owner: string
+  owner: string,
+}
+
+interface Scores{
+  originality: number,
+  feasibility: number,
+  marketDemand: number,
+  complexity: number,
+  completeness: number,
+  technologyStack: number,
+  softwareRequirements: number,
+  algorithms: number
 }
 
 export type {
   IdeaProps,
   DataType,
-  IdeaMetadata
+  IdeaMetadata,
+  Scores
 }

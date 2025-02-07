@@ -1,9 +1,7 @@
 import {
-  DialogActionTrigger,
   DialogBody,
   DialogCloseTrigger,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -25,14 +23,14 @@ import {
   SelectTrigger,
   SelectValueText,
 } from "@/components/ui/select"
-import { config } from "../utils";
+import { config, types } from "../utils";
 import {
   FileUploadList,
   FileUploadRoot,
   FileUploadTrigger,
 } from "@/components/ui/file-upload"
 import { HiCamera } from "react-icons/hi"
-import { useWriteContract } from "wagmi";
+import { useWriteContract, useAccount } from "wagmi";
 import ABI from "../../public/IdeaMarketplace.json";
 
 const pinata = config.pinata;
@@ -50,6 +48,7 @@ const categoryOptions = createListCollection({
 
 
 const IdeaCreator = () => {
+  const { address } = useAccount();
   const { writeContract } = useWriteContract()
   const [ideaData, setIdeaData] = useState({
     title: "",
@@ -60,22 +59,13 @@ const IdeaCreator = () => {
     owner: "",
   });
 
-  interface IdeaDataType {
-    title: string;
-    description: string;
-    categories: string[];
-    ipfsHash: string;
-    content: string;
-    owner: string;
-  }
-
   const mintNFT = (ipfsHash: string) => {
     writeContract({
       abi:ABI.abi,
       address:import.meta.env.VITE_SC_ADDRESS,
       functionName:"mintIdea",
       args: [
-        "0x2346ac3Bc15656D4dE1da99384B5498A75f128a2",
+        address,
         ipfsHash,
         {
           originality: 1,
@@ -86,7 +76,7 @@ const IdeaCreator = () => {
           technologyStack: 2,
           softwareRequirements: 5,
           algorithms: 5,
-        }
+        },
       ]
     })
   }
@@ -104,13 +94,13 @@ const IdeaCreator = () => {
       console.log(error);
     }
 
-    const submittedIdea: IdeaDataType = {
+    const submittedIdea: types.IdeaMetadata = {
       title,
       description,
       categories,
       ipfsHash,
       content,
-      owner,
+      owner
     };
 
     try {
@@ -196,12 +186,6 @@ const IdeaCreator = () => {
             </Button>
           </Fieldset.Root>
         </DialogBody>
-        <DialogFooter>
-          <DialogActionTrigger asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogActionTrigger>
-          <Button>Save</Button>
-        </DialogFooter>
         <DialogCloseTrigger />
       </DialogContent>
     </DialogRoot >

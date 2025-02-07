@@ -1,4 +1,4 @@
-import { Button, Badge, HStack } from "@chakra-ui/react";
+import { Button, Badge, HStack, Stat, Wrap } from "@chakra-ui/react";
 import {
   DialogActionTrigger,
   DialogBody,
@@ -14,12 +14,17 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { types } from "@/utils";
 
-const IdeaModal = ({
+interface IdeaModalProps extends types.IdeaMetadata {
+  scores: types.Scores;
+}
+
+const IdeaModal: React.FC<IdeaModalProps> = ({
   title,
   categories,
   content,
   owner,
-}: types.IdeaMetadata) => {
+  scores,
+}) => {
   return (
     <DialogRoot>
       <DialogTrigger asChild>
@@ -42,6 +47,14 @@ const IdeaModal = ({
           </p>
         </DialogHeader>
         <DialogBody>
+          <Wrap gap="4" justify="center">
+            {Object.entries(scores).map(([category, score]) => (
+              <Stat.Root key={category} p="2" borderWidth="1px" borderRadius="lg" boxShadow="sm">
+                <Stat.Label fontWeight="medium" color="gray.600">{category}</Stat.Label>
+                <Stat.ValueText fontSize="2xl" color="gray.800">{score}/10</Stat.ValueText>
+              </Stat.Root>
+            ))}
+          </Wrap>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {content}
           </ReactMarkdown>
