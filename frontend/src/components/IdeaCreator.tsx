@@ -76,7 +76,17 @@ const IdeaCreator = () => {
       functionName:"mintIdea",
       args: [
         "0x2346ac3Bc15656D4dE1da99384B5498A75f128a2",
-        ipfsHash
+        ipfsHash,
+        {
+          originality: 1,
+          feasibility: 5,
+          marketDemand: 3,
+          complexity: 8,
+          completeness: 10,
+          technologyStack: 2,
+          softwareRequirements: 5,
+          algorithms: 5,
+        }
       ]
     })
   }

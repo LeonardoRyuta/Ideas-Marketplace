@@ -1,0 +1,56 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: IdeaMarketplace
+    network: base-sepolia
+    source:
+      address: "0xc0486d34A0cA91445438Bd2053Ce07D006f88b6B"
+      abi: IdeaMarketplace
+      startBlock: 21586105
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - BatchMetadataUpdate
+        - IdeaMinted
+        - MetadataUpdate
+        - OfferAccepted
+        - OfferPlaced
+        - OfferWithdrawn
+        - OwnershipTransferred
+        - ScoresSet
+        - Transfer
+      abis:
+        - name: IdeaMarketplace
+          file: ./abis/IdeaMarketplace.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
+        - event: IdeaMinted(indexed uint256,indexed address,string)
+          handler: handleIdeaMinted
+        - event: MetadataUpdate(uint256)
+          handler: handleMetadataUpdate
+        - event: OfferAccepted(indexed uint256,indexed address,indexed address,uint256)
+          handler: handleOfferAccepted
+        - event: OfferPlaced(indexed uint256,indexed address,uint256)
+          handler: handleOfferPlaced
+        - event: OfferWithdrawn(indexed uint256,indexed address)
+          handler: handleOfferWithdrawn
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: ScoresSet(indexed uint256,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8)
+          handler: handleScoresSet
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/idea-marketplace.ts
