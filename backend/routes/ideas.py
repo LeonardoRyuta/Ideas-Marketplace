@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from services.ipfs_service import upload_to_ipfs
+from services.ipfs_service import upload_to_ipfs,list_ipfs_files
 router = APIRouter()
 
 # Define Pydantic model for request validation
@@ -31,6 +31,7 @@ def submit_idea(idea: IdeaCreate):
     }
 @router.get("/list")
 def list_ideas():
-    return {"ideas": ideas}
+    print("EEEEE")
+    return {"ideas": list_ipfs_files()}
 
 
