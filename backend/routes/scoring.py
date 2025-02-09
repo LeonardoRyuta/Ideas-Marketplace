@@ -74,7 +74,7 @@ def submit_idea(idea: IdeaCreate):
     """
     Submits an idea, uploads it to IPFS, and retrieves an AI score from the agent.
     """
-    idea_dict = idea.dict()
+    idea_dict = idea.model_dump()
 
     # Upload idea to IPFS
     # ipfs_hash = upload_to_ipfs(idea_dict)
