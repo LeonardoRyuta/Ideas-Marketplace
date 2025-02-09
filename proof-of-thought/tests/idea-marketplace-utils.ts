@@ -10,6 +10,7 @@ import {
   OfferPlaced,
   OfferWithdrawn,
   OwnershipTransferred,
+  ScoresSet,
   Transfer
 } from "../generated/IdeaMarketplace/IdeaMarketplace"
 
@@ -225,6 +226,58 @@ export function createOwnershipTransferredEvent(
   )
 
   return ownershipTransferredEvent
+}
+
+export function createScoresSetEvent(
+  tokenId: BigInt,
+  originality: i32,
+  feasibility: i32,
+  marketDemand: i32,
+  complexity: i32,
+  completeness: i32
+): ScoresSet {
+  let scoresSetEvent = changetype<ScoresSet>(newMockEvent())
+
+  scoresSetEvent.parameters = new Array()
+
+  scoresSetEvent.parameters.push(
+    new ethereum.EventParam(
+      "tokenId",
+      ethereum.Value.fromUnsignedBigInt(tokenId)
+    )
+  )
+  scoresSetEvent.parameters.push(
+    new ethereum.EventParam(
+      "originality",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(originality))
+    )
+  )
+  scoresSetEvent.parameters.push(
+    new ethereum.EventParam(
+      "feasibility",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(feasibility))
+    )
+  )
+  scoresSetEvent.parameters.push(
+    new ethereum.EventParam(
+      "marketDemand",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(marketDemand))
+    )
+  )
+  scoresSetEvent.parameters.push(
+    new ethereum.EventParam(
+      "complexity",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(complexity))
+    )
+  )
+  scoresSetEvent.parameters.push(
+    new ethereum.EventParam(
+      "completeness",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(completeness))
+    )
+  )
+
+  return scoresSetEvent
 }
 
 export function createTransferEvent(

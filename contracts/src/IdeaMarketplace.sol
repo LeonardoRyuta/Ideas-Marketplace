@@ -9,6 +9,15 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
     uint128 private _tokenIdCounter;
 
     mapping(uint256 => mapping(address => uint256)) public offers;
+    struct Score {
+        uint8 originality;
+        uint8 feasibility;
+        uint8 marketDemand;
+        uint8 complexity;
+        uint8 completeness;
+    }
+
+    mapping(uint256 => Score) private ideaScores;
 
     event IdeaMinted(
         uint256 indexed tokenId,
@@ -30,10 +39,18 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
         address indexed buyer,
         uint256 salePrice
     );
+    event ScoresSet(
+        uint256 indexed tokenId,
+        uint8 originality,
+        uint8 feasibility,
+        uint8 marketDemand,
+        uint8 complexity,
+        uint8 completeness
+    );
 
     constructor() ERC721("IdeaNFT", "IDEA") ERC2981() Ownable(msg.sender) {}
 
-    function mintIdea(address to, string calldata tokenURI_) external {
+    function mintIdea(address to, string calldata tokenURI_, Score calldata _ideaScores) external {
         uint256 tokenId = _tokenIdCounter;
         _tokenIdCounter++;
 
@@ -41,6 +58,15 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
         _setTokenURI(tokenId, tokenURI_);
 
         _setTokenRoyalty(tokenId, to, 50);
+
+        setScores(
+            tokenId,
+            _ideaScores.originality,
+            _ideaScores.feasibility,
+            _ideaScores.marketDemand,
+            _ideaScores.complexity,
+            _ideaScores.completeness
+        );
 
         emit IdeaMinted(tokenId, to, tokenURI_);
     }
@@ -89,23 +115,59 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
         emit OfferAccepted(tokenId, msg.sender, offeror, salePrice);
     }
 
-    function getAllOffers() external view returns (uint256[] memory) {
-        uint256[] memory tokenIds = new uint256[](_tokenIdCounter);
-        uint256 count = 0;
-        for (uint256 i = 0; i < _tokenIdCounter; i++) {
-            if (ownerOf(i) != address(0)) {
-                tokenIds[count] = i;
-                count++;
-            }
-        }
-        uint256[] memory result = new uint256[](count);
-        for (uint256 i = 0; i < count; i++) {
-            result[i] = tokenIds[i];
-        }
-        return result;
+    function setScores(
+        uint256 tokenId,
+        uint8 originality,
+        uint8 feasibility,
+        uint8 marketDemand,
+        uint8 complexity,
+        uint8 completeness
+    ) private {
+        require(originality >= 1 && originality <= 10, "Originality out of range");
+        require(feasibility >= 1 && feasibility <= 10, "Feasibility out of range");
+        require(marketDemand >= 1 && marketDemand <= 10, "Market Demand out of range");
+        require(complexity >= 1 && complexity <= 10, "Complexity out of range");
+        require(completeness >= 1 && completeness <= 10, "Completeness out of range");
+
+        ideaScores[tokenId] = Score({
+            originality: originality,
+            feasibility: feasibility,
+            marketDemand: marketDemand,
+            complexity: complexity,
+            completeness: completeness
+        });
+
+        emit ScoresSet(
+            tokenId,
+            originality,
+            feasibility,
+            marketDemand,
+            complexity,
+            completeness
+        );
     }
 
-    
+    function getScores(uint256 tokenId)
+        external
+        view
+        returns (
+            uint8 originality,
+            uint8 feasibility,
+            uint8 marketDemand,
+            uint8 complexity,
+            uint8 completeness
+        )
+    {
+        Score memory s = ideaScores[tokenId];
+        return (
+            s.originality,
+            s.feasibility,
+            s.marketDemand,
+            s.complexity,
+            s.completeness
+        );
+    }
+
     function setRoyalty(
         uint256 tokenId,
         address receiver,

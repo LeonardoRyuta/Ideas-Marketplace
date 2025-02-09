@@ -311,6 +311,49 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "originality",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "feasibility",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "marketDemand",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "complexity",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "completeness",
+        "type": "uint8"
+      }
+    ],
+    "name": "ScoresSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "from",
         "type": "address"
@@ -362,11 +405,11 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getAllOffers",
-    "outputs": [
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+    "inputs": [
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
+    "name": "getApproved",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -374,8 +417,14 @@
     "inputs": [
       { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
-    "name": "getApproved",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "getScores",
+    "outputs": [
+      { "internalType": "uint8", "name": "originality", "type": "uint8" },
+      { "internalType": "uint8", "name": "feasibility", "type": "uint8" },
+      { "internalType": "uint8", "name": "marketDemand", "type": "uint8" },
+      { "internalType": "uint8", "name": "complexity", "type": "uint8" },
+      { "internalType": "uint8", "name": "completeness", "type": "uint8" }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -392,7 +441,19 @@
   {
     "inputs": [
       { "internalType": "address", "name": "to", "type": "address" },
-      { "internalType": "string", "name": "tokenURI_", "type": "string" }
+      { "internalType": "string", "name": "tokenURI_", "type": "string" },
+      {
+        "components": [
+          { "internalType": "uint8", "name": "originality", "type": "uint8" },
+          { "internalType": "uint8", "name": "feasibility", "type": "uint8" },
+          { "internalType": "uint8", "name": "marketDemand", "type": "uint8" },
+          { "internalType": "uint8", "name": "complexity", "type": "uint8" },
+          { "internalType": "uint8", "name": "completeness", "type": "uint8" }
+        ],
+        "internalType": "struct IdeaMarketplace.Score",
+        "name": "_ideaScores",
+        "type": "tuple"
+      }
     ],
     "name": "mintIdea",
     "outputs": [],

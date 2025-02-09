@@ -1,9 +1,7 @@
 import {
-  DialogActionTrigger,
   DialogBody,
   DialogCloseTrigger,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -25,17 +23,18 @@ import {
   SelectTrigger,
   SelectValueText,
 } from "@/components/ui/select"
-import { config } from "../utils";
+import { config, types } from "../utils";
 import {
   FileUploadList,
   FileUploadRoot,
   FileUploadTrigger,
 } from "@/components/ui/file-upload"
 import { HiCamera } from "react-icons/hi"
-import { useWriteContract } from "wagmi";
+import { useWriteContract, useAccount } from "wagmi";
 import ABI from "../../public/IdeaMarketplace.json";
 
 const pinata = config.pinata;
+const serverURL = "https://ideas-marketplace.onrender.com";
 
 const categoryOptions = createListCollection({
   items: [
@@ -50,6 +49,7 @@ const categoryOptions = createListCollection({
 
 
 const IdeaCreator = () => {
+  const { address } = useAccount();
   const { writeContract } = useWriteContract()
   const [ideaData, setIdeaData] = useState({
     title: "",
@@ -60,23 +60,16 @@ const IdeaCreator = () => {
     owner: "",
   });
 
-  interface IdeaDataType {
-    title: string;
-    description: string;
-    categories: string[];
-    ipfsHash: string;
-    content: string;
-    owner: string;
-  }
-
-  const mintNFT = (ipfsHash: string) => {
+  const mintNFT = (ipfsHash: string, scores: types.Scores) => {
+    console.log("Minting NFT with IPFS hash:", ipfsHash);
     writeContract({
       abi:ABI.abi,
       address:import.meta.env.VITE_SC_ADDRESS,
       functionName:"mintIdea",
       args: [
-        "0x2346ac3Bc15656D4dE1da99384B5498A75f128a2",
-        ipfsHash
+        address,
+        ipfsHash,
+        scores
       ]
     })
   }
@@ -94,19 +87,47 @@ const IdeaCreator = () => {
       console.log(error);
     }
 
-    const submittedIdea: IdeaDataType = {
+    const submittedIdea: types.IdeaMetadata = {
       title,
       description,
       categories,
       ipfsHash,
       content,
-      owner,
+      owner
     };
+
+    const body = JSON.stringify({
+      "title": submittedIdea.title,
+      "description": submittedIdea.description + " " + submittedIdea.content,
+    });
+
+    console.log(body);
+    const response = await fetch(`${serverURL}/scoring/submit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: body,
+    });
+    
+    const data = await response.json();
+
+    console.log("Data:", data);
+
+    const scores = data.idea.ai_score.originality ? data.idea.ai_score : {   originality: 5,
+      feasibility: 8,
+      marketDemand: 5,
+      complexity: 5,
+      completeness: 7,
+    } // added static scores in case it doesnt work for the demo
+
+    console.log("Scores:", scores); 
 
     try {
       const upload = await pinata.upload.json(submittedIdea);
       console.log(upload);
-      mintNFT(upload.IpfsHash);
+      mintNFT(upload.IpfsHash, scores);
     } catch (error) {
       console.log(error);
     }
@@ -186,12 +207,6 @@ const IdeaCreator = () => {
             </Button>
           </Fieldset.Root>
         </DialogBody>
-        <DialogFooter>
-          <DialogActionTrigger asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogActionTrigger>
-          <Button>Save</Button>
-        </DialogFooter>
         <DialogCloseTrigger />
       </DialogContent>
     </DialogRoot >

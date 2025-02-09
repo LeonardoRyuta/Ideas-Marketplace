@@ -84,6 +84,19 @@ type OwnershipTransferred @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
+type ScoresSet @entity(immutable: true) {
+  id: Bytes!
+  tokenId: BigInt! # uint256
+  originality: Int! # uint8
+  feasibility: Int! # uint8
+  marketDemand: Int! # uint8
+  complexity: Int! # uint8
+  completeness: Int! # uint8
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
 type Transfer @entity(immutable: true) {
   id: Bytes!
   from: Bytes! # address

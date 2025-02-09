@@ -8,6 +8,7 @@ import {
   OfferPlaced as OfferPlacedEvent,
   OfferWithdrawn as OfferWithdrawnEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
+  ScoresSet as ScoresSetEvent,
   Transfer as TransferEvent
 } from "../generated/IdeaMarketplace/IdeaMarketplace"
 import {
@@ -20,6 +21,7 @@ import {
   OfferPlaced,
   OfferWithdrawn,
   OwnershipTransferred,
+  ScoresSet,
   Transfer
 } from "../generated/schema"
 
@@ -150,6 +152,24 @@ export function handleOwnershipTransferred(
   )
   entity.previousOwner = event.params.previousOwner
   entity.newOwner = event.params.newOwner
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleScoresSet(event: ScoresSetEvent): void {
+  let entity = new ScoresSet(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.tokenId = event.params.tokenId
+  entity.originality = event.params.originality
+  entity.feasibility = event.params.feasibility
+  entity.marketDemand = event.params.marketDemand
+  entity.complexity = event.params.complexity
+  entity.completeness = event.params.completeness
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
