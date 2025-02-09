@@ -34,6 +34,7 @@ import { useWriteContract, useAccount } from "wagmi";
 import ABI from "../../public/IdeaMarketplace.json";
 
 const pinata = config.pinata;
+const serverURL = "https://ideas-marketplace.onrender.com";
 
 const categoryOptions = createListCollection({
   items: [
@@ -84,15 +85,15 @@ const IdeaCreator = () => {
   const handleSubmit = async () => {
     const { title, description, categories, image, content, owner } = ideaData;
 
-    let ipfsHash = "";
+    let ipfsHash = "bafkreiczbwgzu3uflu26zgkf7lmzazmqacqzfltzi6h3tknr2x7mbum5xi";
 
-    try {
-      const upload = await pinata.upload.file(image!);
-      console.log(upload);
-      ipfsHash = upload.IpfsHash;
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const upload = await pinata.upload.file(image!);
+    //   console.log(upload);
+    //   ipfsHash = upload.IpfsHash;
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
     const submittedIdea: types.IdeaMetadata = {
       title,
@@ -103,10 +104,26 @@ const IdeaCreator = () => {
       owner
     };
 
+    const body = JSON.stringify({
+      "title": submittedIdea.title,
+      "description": submittedIdea.description + " " + submittedIdea.content,
+    });
+
+    console.log(body);
+
     try {
-      const upload = await pinata.upload.json(submittedIdea);
-      console.log(upload);
-      mintNFT(upload.IpfsHash);
+      const response = await fetch(`${serverURL}/scoring/submit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: body,
+      });
+      console.log(response);
+      // const upload = await pinata.upload.json(submittedIdea);
+      // console.log(upload);
+      // mintNFT(upload.IpfsHash);
     } catch (error) {
       console.log(error);
     }
