@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogRoot,
+  DialogRoot
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import {
@@ -32,6 +32,7 @@ import {
 import { HiCamera } from "react-icons/hi"
 import { useWriteContract, useAccount } from "wagmi";
 import ABI from "../../public/IdeaMarketplace.json";
+import { toaster } from "@/components/ui/toaster"
 
 const pinata = config.pinata;
 const serverURL = "https://ideas-marketplace.onrender.com";
@@ -59,6 +60,7 @@ const IdeaCreator = () => {
     content: "",
     owner: "",
   });
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const mintNFT = (ipfsHash: string, scores: types.Scores) => {
     console.log("Minting NFT with IPFS hash:", ipfsHash);
@@ -76,6 +78,13 @@ const IdeaCreator = () => {
 
   const handleSubmit = async () => {
     const { title, description, categories, image, content, owner } = ideaData;
+
+    toaster.create({
+      description: "Submitting idea...",
+      duration: 3000
+    })
+
+    setDialogOpen(false);
 
     let ipfsHash = "";
 
@@ -132,27 +141,22 @@ const IdeaCreator = () => {
       console.log(error);
     }
 
-    //upload the submitted idea to ipfs with pinata and get hash
-
-
-
     console.log("Idea submitted:", submittedIdea);
-    // Here, send the data to your backend or blockchain
-    // Optionally reset the form:
-    // setIdeaData({
-    //   title: "",
-    //   description: "",
-    //   categories: [],
-    //   image: null,
-    //   content: "",
-    //   owner: "",
-    // });
+
+    setIdeaData({
+      title: "",
+      description: "",
+      categories: [],
+      image: new File([""], "filename"),
+      content: "",
+      owner: "",
+    });
   };
 
   return (
-    <DialogRoot>
+    <DialogRoot open={dialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" onClick={() => setDialogOpen(true)}>
           Create Idea
         </Button>
       </DialogTrigger>
@@ -207,7 +211,7 @@ const IdeaCreator = () => {
             </Button>
           </Fieldset.Root>
         </DialogBody>
-        <DialogCloseTrigger />
+        <DialogCloseTrigger onClick={() => setDialogOpen(false)} />
       </DialogContent>
     </DialogRoot >
   );

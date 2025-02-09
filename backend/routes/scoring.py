@@ -13,7 +13,7 @@ load_dotenv()
 router = APIRouter()
 
 # Correct API URL (Update to match your agent)
-AGENT_API_URL = "https://autonome.alt.technology/pot-bzefdg/3d76617f-e298-0e06-9503-5b690247c2d2/message"
+AGENT_API_URL = "https://autonome.alt.technology/idealist-yjvvrw/3d76617f-e298-0e06-9503-5b690247c2d2/message"
 
 # Authentication Credentials
 BASIC = os.getenv("BASIC")

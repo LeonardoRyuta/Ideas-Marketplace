@@ -47,7 +47,7 @@ const IdeaModal: React.FC<IdeaModalProps> = ({
           </p>
         </DialogHeader>
         <DialogBody>
-          <Wrap gap="4" justify="center">
+          <Wrap gap="4" justify="center" mb="4">
             {Object.entries(scores).map(([category, score]) => (
               <Stat.Root key={category} p="2" borderWidth="1px" borderRadius="lg" boxShadow="sm">
                 <Stat.Label fontWeight="medium" color="gray.600">{category}</Stat.Label>

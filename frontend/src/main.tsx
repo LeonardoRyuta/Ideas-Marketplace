@@ -5,7 +5,7 @@ import { Home } from './pages'
 import { Layout } from './components'
 import { BrowserRouter, Routes, Route } from "react-router";
 import { Provider } from "@/components/ui/provider";
-
+import { Toaster } from "@/components/ui/toaster";
 import '@rainbow-me/rainbowkit/styles.css';
 
 import {
@@ -43,6 +43,7 @@ createRoot(document.getElementById('root')!).render(
         <RainbowKitProvider>
           <Provider>
             <BrowserRouter>
+              <Toaster />
               <Routes>
                 <Route element={<Layout />} >
                   <Route index element={<Home />} />

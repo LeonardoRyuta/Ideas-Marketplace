@@ -24,10 +24,7 @@ const IdeaCard = ({ idea }: { idea: types.IdeaProps }) => {
     feasibility: 0,
     marketDemand: 0,
     complexity: 0,
-    completeness: 0,
-    technologyStack: 0,
-    softwareRequirements: 0,
-    algorithms: 0
+    completeness: 0
   });
 
   useEffect(() => {
@@ -58,10 +55,7 @@ const IdeaCard = ({ idea }: { idea: types.IdeaProps }) => {
         feasibility: dataArray[1],
         marketDemand: dataArray[2],
         complexity: dataArray[3],
-        completeness: dataArray[4],
-        technologyStack: dataArray[5],
-        softwareRequirements: dataArray[6],
-        algorithms: dataArray[7],
+        completeness: dataArray[4]
       });
     }
   }, [getIdeaScores.data]);
