@@ -77,9 +77,9 @@ def submit_idea(idea: IdeaCreate):
     idea_dict = idea.dict()
 
     # Upload idea to IPFS
-    ipfs_hash = upload_to_ipfs(idea_dict)
-    if not ipfs_hash:
-        return {"error": "Failed to upload idea to IPFS"}
+    # ipfs_hash = upload_to_ipfs(idea_dict)
+    # if not ipfs_hash:
+    #     return {"error": "Failed to upload idea to IPFS"}
 
     # Get AI-generated score from the agent
     ai_prompt = f"""
@@ -113,7 +113,7 @@ def submit_idea(idea: IdeaCreate):
 
     # Store locally (for now)
     idea_dict["id"] = len(ideas) + 1
-    idea_dict["ipfs_hash"] = ipfs_hash
+    # idea_dict["ipfs_hash"] = ipfs_hash
     idea_dict["ai_score"] = ai_score  # Store AI score with the idea
     ideas.append(idea_dict)
 
