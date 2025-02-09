@@ -1,6 +1,6 @@
 "use client"
 
-import { Color, NativeSelect as Select } from "@chakra-ui/react"
+import { NativeSelect as Select } from "@chakra-ui/react"
 import * as React from "react"
 
 interface NativeSelectRootProps extends Select.RootProps {
