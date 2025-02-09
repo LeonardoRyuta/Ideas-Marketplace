@@ -27,18 +27,12 @@ const IdeaCard = ({ idea }: { idea: types.IdeaProps }) => {
     completeness: 0
   });
 
-  useEffect(() => {
-    if (address && idea.creator.toLowerCase() === address.toLowerCase()) {
-      setIsOwner(true);
-    }
-
-    (async () => {
-      const file = await fetch(`https://ipfs.io/ipfs/${idea.metadataURI}`).then((res) => res.json());
-      setIdeaMetadata(file);
-
-      console.log(file);
-    })();
-  }, []);
+  const getIdeaOwner = useReadContract({
+    abi: ABI.abi,
+    address: import.meta.env.VITE_SC_ADDRESS,
+    functionName: "ownerOf",
+    args: [idea.tokenId],
+  })
 
   const getIdeaScores = useReadContract({
     abi: ABI.abi,
@@ -59,6 +53,32 @@ const IdeaCard = ({ idea }: { idea: types.IdeaProps }) => {
       });
     }
   }, [getIdeaScores.data]);
+
+  useEffect(() => {
+    if (getIdeaOwner.data) {
+      const ideaOwner = getIdeaOwner.data as string;
+      console.log(ideaOwner);
+
+      if (address && ideaOwner === address.toLowerCase()) {
+        setIsOwner(true);
+      }
+
+      (async () => {
+        const file = await fetch(`https://ipfs.io/ipfs/${idea.metadataURI}`).then((res) => res.json());
+
+        setIdeaMetadata({
+          title: file.title,
+          description: file.description,
+          categories: file.categories,
+          content: file.content,
+          ipfsHash: file.ipfsHash,
+          owner: ideaOwner
+        });
+
+        console.log(file);
+      })();
+    }
+  }, [getIdeaOwner.data]);
 
   return (
     <Box
@@ -86,10 +106,10 @@ const IdeaCard = ({ idea }: { idea: types.IdeaProps }) => {
           {ideaMetadata?.description}
         </Text>
         <Text fontSize="xs" color="gray.500">
-          Owned by: {idea.creator.slice(0, 6)}...{idea.creator.slice(-4)}
+          Owned by: {ideaMetadata?.owner.slice(0, 6)}...{ideaMetadata?.owner.slice(-4)}
         </Text>
         <HStack justify="space-between" w="full">
-          <IdeaModal title={ideaMetadata?.title} description={ideaMetadata?.description} categories={ideaMetadata?.categories} ipfsHash={ideaMetadata?.ipfsHash} content={ideaMetadata?.content} owner={idea?.creator} scores={scores} />
+          <IdeaModal title={ideaMetadata?.title} description={ideaMetadata?.description} categories={ideaMetadata?.categories} ipfsHash={ideaMetadata?.ipfsHash} content={ideaMetadata?.content} owner={ideaMetadata?.owner} scores={scores} />
           {
             isOwner ?
               <SeeOffers tokenId={idea.tokenId} />
