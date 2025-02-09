@@ -76,7 +76,7 @@ const IdeaCard = ({ idea }: { idea: types.IdeaProps }) => {
       p={4}
       bg="white"
     >
-      <Image src={ideaMetadata?.ipfsHash || "/placeholder.png"} alt={ideaMetadata?.title} borderRadius="md" />
+      <Image src={`https://ipfs.io/ipfs/${ideaMetadata?.ipfsHash}`} alt={ideaMetadata?.title} borderRadius="md" />
       <VStack align="start" gap={2} mt={4}>
         <HStack>
           {ideaMetadata?.categories.map((cat) => (
