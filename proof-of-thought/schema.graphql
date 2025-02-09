@@ -92,9 +92,6 @@ type ScoresSet @entity(immutable: true) {
   marketDemand: Int! # uint8
   complexity: Int! # uint8
   completeness: Int! # uint8
-  technologyStack: Int! # uint8
-  softwareRequirements: Int! # uint8
-  algorithms: Int! # uint8
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

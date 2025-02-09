@@ -60,7 +60,8 @@ const IdeaCreator = () => {
     owner: "",
   });
 
-  const mintNFT = (ipfsHash: string) => {
+  const mintNFT = (ipfsHash: string, scores: types.Scores) => {
+    console.log("Minting NFT with IPFS hash:", ipfsHash);
     writeContract({
       abi:ABI.abi,
       address:import.meta.env.VITE_SC_ADDRESS,
@@ -68,16 +69,7 @@ const IdeaCreator = () => {
       args: [
         address,
         ipfsHash,
-        {
-          originality: 1,
-          feasibility: 5,
-          marketDemand: 3,
-          complexity: 8,
-          completeness: 10,
-          technologyStack: 2,
-          softwareRequirements: 5,
-          algorithms: 5,
-        },
+        scores
       ]
     })
   }
@@ -85,15 +77,15 @@ const IdeaCreator = () => {
   const handleSubmit = async () => {
     const { title, description, categories, image, content, owner } = ideaData;
 
-    let ipfsHash = "bafkreiczbwgzu3uflu26zgkf7lmzazmqacqzfltzi6h3tknr2x7mbum5xi";
+    let ipfsHash = "";
 
-    // try {
-    //   const upload = await pinata.upload.file(image!);
-    //   console.log(upload);
-    //   ipfsHash = upload.IpfsHash;
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const upload = await pinata.upload.file(image!);
+      console.log(upload);
+      ipfsHash = upload.IpfsHash;
+    } catch (error) {
+      console.log(error);
+    }
 
     const submittedIdea: types.IdeaMetadata = {
       title,
@@ -110,20 +102,23 @@ const IdeaCreator = () => {
     });
 
     console.log(body);
+    const response = await fetch(`${serverURL}/scoring/submit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: body,
+    });
+    
+    const data = await response.json();
+
+    const scores = data.idea.ai_score;
 
     try {
-      const response = await fetch(`${serverURL}/scoring/submit`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: body,
-      });
-      console.log(response);
-      // const upload = await pinata.upload.json(submittedIdea);
-      // console.log(upload);
-      // mintNFT(upload.IpfsHash);
+      const upload = await pinata.upload.json(submittedIdea);
+      console.log(upload);
+      mintNFT(upload.IpfsHash, scores);
     } catch (error) {
       console.log(error);
     }

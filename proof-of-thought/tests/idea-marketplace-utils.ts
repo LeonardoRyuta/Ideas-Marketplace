@@ -234,10 +234,7 @@ export function createScoresSetEvent(
   feasibility: i32,
   marketDemand: i32,
   complexity: i32,
-  completeness: i32,
-  technologyStack: i32,
-  softwareRequirements: i32,
-  algorithms: i32
+  completeness: i32
 ): ScoresSet {
   let scoresSetEvent = changetype<ScoresSet>(newMockEvent())
 
@@ -277,24 +274,6 @@ export function createScoresSetEvent(
     new ethereum.EventParam(
       "completeness",
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(completeness))
-    )
-  )
-  scoresSetEvent.parameters.push(
-    new ethereum.EventParam(
-      "technologyStack",
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(technologyStack))
-    )
-  )
-  scoresSetEvent.parameters.push(
-    new ethereum.EventParam(
-      "softwareRequirements",
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(softwareRequirements))
-    )
-  )
-  scoresSetEvent.parameters.push(
-    new ethereum.EventParam(
-      "algorithms",
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(algorithms))
     )
   )
 

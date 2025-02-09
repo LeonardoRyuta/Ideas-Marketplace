@@ -26,9 +26,6 @@ interface Scores{
   marketDemand: number,
   complexity: number,
   completeness: number,
-  technologyStack: number,
-  softwareRequirements: number,
-  algorithms: number
 }
 
 export type {

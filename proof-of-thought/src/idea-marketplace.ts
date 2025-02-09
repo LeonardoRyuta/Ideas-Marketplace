@@ -170,9 +170,6 @@ export function handleScoresSet(event: ScoresSetEvent): void {
   entity.marketDemand = event.params.marketDemand
   entity.complexity = event.params.complexity
   entity.completeness = event.params.completeness
-  entity.technologyStack = event.params.technologyStack
-  entity.softwareRequirements = event.params.softwareRequirements
-  entity.algorithms = event.params.algorithms
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp

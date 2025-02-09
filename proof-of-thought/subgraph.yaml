@@ -8,9 +8,9 @@ dataSources:
     name: IdeaMarketplace
     network: base-sepolia
     source:
-      address: "0xc0486d34A0cA91445438Bd2053Ce07D006f88b6B"
+      address: "0xF225da581605EDd2Feb07f198e8629eF9dCb6BF9"
       abi: IdeaMarketplace
-      startBlock: 21586105
+      startBlock: 21665271
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -49,7 +49,7 @@ dataSources:
           handler: handleOfferWithdrawn
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
-        - event: ScoresSet(indexed uint256,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8)
+        - event: ScoresSet(indexed uint256,uint8,uint8,uint8,uint8,uint8)
           handler: handleScoresSet
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer

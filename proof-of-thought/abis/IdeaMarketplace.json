@@ -344,24 +344,6 @@
         "internalType": "uint8",
         "name": "completeness",
         "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "technologyStack",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "softwareRequirements",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "algorithms",
-        "type": "uint8"
       }
     ],
     "name": "ScoresSet",
@@ -441,14 +423,7 @@
       { "internalType": "uint8", "name": "feasibility", "type": "uint8" },
       { "internalType": "uint8", "name": "marketDemand", "type": "uint8" },
       { "internalType": "uint8", "name": "complexity", "type": "uint8" },
-      { "internalType": "uint8", "name": "completeness", "type": "uint8" },
-      { "internalType": "uint8", "name": "technologyStack", "type": "uint8" },
-      {
-        "internalType": "uint8",
-        "name": "softwareRequirements",
-        "type": "uint8"
-      },
-      { "internalType": "uint8", "name": "algorithms", "type": "uint8" }
+      { "internalType": "uint8", "name": "completeness", "type": "uint8" }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -473,18 +448,7 @@
           { "internalType": "uint8", "name": "feasibility", "type": "uint8" },
           { "internalType": "uint8", "name": "marketDemand", "type": "uint8" },
           { "internalType": "uint8", "name": "complexity", "type": "uint8" },
-          { "internalType": "uint8", "name": "completeness", "type": "uint8" },
-          {
-            "internalType": "uint8",
-            "name": "technologyStack",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint8",
-            "name": "softwareRequirements",
-            "type": "uint8"
-          },
-          { "internalType": "uint8", "name": "algorithms", "type": "uint8" }
+          { "internalType": "uint8", "name": "completeness", "type": "uint8" }
         ],
         "internalType": "struct IdeaMarketplace.Score",
         "name": "_ideaScores",

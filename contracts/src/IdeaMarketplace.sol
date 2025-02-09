@@ -15,9 +15,6 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
         uint8 marketDemand;
         uint8 complexity;
         uint8 completeness;
-        uint8 technologyStack;
-        uint8 softwareRequirements;
-        uint8 algorithms;
     }
 
     mapping(uint256 => Score) private ideaScores;
@@ -48,10 +45,7 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
         uint8 feasibility,
         uint8 marketDemand,
         uint8 complexity,
-        uint8 completeness,
-        uint8 technologyStack,
-        uint8 softwareRequirements,
-        uint8 algorithms
+        uint8 completeness
     );
 
     constructor() ERC721("IdeaNFT", "IDEA") ERC2981() Ownable(msg.sender) {}
@@ -71,10 +65,7 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
             _ideaScores.feasibility,
             _ideaScores.marketDemand,
             _ideaScores.complexity,
-            _ideaScores.completeness,
-            _ideaScores.technologyStack,
-            _ideaScores.softwareRequirements,
-            _ideaScores.algorithms
+            _ideaScores.completeness
         );
 
         emit IdeaMinted(tokenId, to, tokenURI_);
@@ -130,29 +121,20 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
         uint8 feasibility,
         uint8 marketDemand,
         uint8 complexity,
-        uint8 completeness,
-        uint8 technologyStack,
-        uint8 softwareRequirements,
-        uint8 algorithms
+        uint8 completeness
     ) private {
         require(originality >= 1 && originality <= 10, "Originality out of range");
         require(feasibility >= 1 && feasibility <= 10, "Feasibility out of range");
         require(marketDemand >= 1 && marketDemand <= 10, "Market Demand out of range");
         require(complexity >= 1 && complexity <= 10, "Complexity out of range");
         require(completeness >= 1 && completeness <= 10, "Completeness out of range");
-        require(technologyStack >= 1 && technologyStack <= 10, "Technology Stack out of range");
-        require(softwareRequirements >= 1 && softwareRequirements <= 10, "Software Requirements out of range");
-        require(algorithms >= 1 && algorithms <= 10, "Algorithms out of range");
 
         ideaScores[tokenId] = Score({
             originality: originality,
             feasibility: feasibility,
             marketDemand: marketDemand,
             complexity: complexity,
-            completeness: completeness,
-            technologyStack: technologyStack,
-            softwareRequirements: softwareRequirements,
-            algorithms: algorithms
+            completeness: completeness
         });
 
         emit ScoresSet(
@@ -161,10 +143,7 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
             feasibility,
             marketDemand,
             complexity,
-            completeness,
-            technologyStack,
-            softwareRequirements,
-            algorithms
+            completeness
         );
     }
 
@@ -176,10 +155,7 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
             uint8 feasibility,
             uint8 marketDemand,
             uint8 complexity,
-            uint8 completeness,
-            uint8 technologyStack,
-            uint8 softwareRequirements,
-            uint8 algorithms
+            uint8 completeness
         )
     {
         Score memory s = ideaScores[tokenId];
@@ -188,10 +164,7 @@ contract IdeaMarketplace is ERC721URIStorage, ERC2981, Ownable {
             s.feasibility,
             s.marketDemand,
             s.complexity,
-            s.completeness,
-            s.technologyStack,
-            s.softwareRequirements,
-            s.algorithms
+            s.completeness
         );
     }
 
